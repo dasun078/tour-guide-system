@@ -1,0 +1,79 @@
+# Python-related files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.env
+
+# Virtual environment
+venv/
+env/
+.virtualenv/
+*.egg-info/
+.eggs/
+
+# Database-related files
+*.db
+*.sqlite3
+
+# Flask-related files
+instance/
+*.log
+*.pid
+
+# Migrations
+migrations/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+*.swp
+
+# Environment variables
+.env
+
+# Node.js (if applicable)
+node_modules/
+npm-debug.log
+
+# Coverage reports
+htmlcov/
+.coverage
+*.cover
+*.py,cover
+
+# Pytest cache
+.pytest_cache/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Backup files
+*.bak
+*.tmp
+
+# Compiled files and packages
+dist/
+build/
+*.egg
+*.whl
+
+# Archives and compressed files
+*.tar
+*.gz
+*.zip
+*.7z
+*.rar
+*.tar.gz
+
+# Logs and temporary files
+logs/
+*.log
+*.tmp
+*.bak

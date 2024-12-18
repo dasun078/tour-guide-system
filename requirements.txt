@@ -1,0 +1,29 @@
+# Flask and extensions
+Flask==2.3.2
+Flask-SQLAlchemy==3.0.3
+Flask-Migrate==4.0.4
+Flask-WTF==1.1.1
+Flask-Login==0.6.3
+Flask-Bcrypt==1.0.1
+
+# Database driver for MySQL
+PyMySQL==1.0.3
+
+# Environment variables
+python-dotenv==1.0.0
+
+# Google Maps API (optional)
+googlemaps==4.4.7
+
+# Email handling (optional)
+Flask-Mail==0.9.1
+
+# Testing
+pytest==7.4.0
+pytest-flask==1.2.0
+
+# Linting and Code Quality (optional)
+flake8==6.0.0
+
+# Other utilities
+Werkzeug==2.3.7
