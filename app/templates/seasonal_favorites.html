@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Seasonal Favorites | Tour Guide System{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Seasonal Favorites</h1>
+        <p>Experience the best destinations for the current season.</p>
+    </div>
+</section>
+
+<section class="seasonal">
+    <div class="container">
+        <h2>Top Picks This Season</h2>
+        <div class="seasonal-grid">
+            <div class="seasonal-item">
+                <img src="/static/images/beach3.jpg" alt="Beaches">
+                <h3>Beaches</h3>
+                <p>Relax on the pristine beaches of the South Coast.</p>
+            </div>
+            <div class="seasonal-item">
+                <img src="/static/images/hills1.jpg" alt="Hill Country">
+                <h3>Hill Country</h3>
+                <p>Explore the misty tea plantations and breathtaking views.</p>
+            </div>
+            <div class="seasonal-item">
+                <img src="/static/images/safari1.jpg" alt="Wildlife Safari">
+                <h3>Wildlife Safari</h3>
+                <p>Discover Sri Lanka's rich wildlife in Yala and Wilpattu.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

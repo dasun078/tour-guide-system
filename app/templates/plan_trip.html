@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Plan Your Trip | Tour Guide System{% endblock %}
+
+{% block content %}
+<section class="plan-trip">
+    <div class="container">
+        <h2>Plan Your Trip</h2>
+        <form action="/plan_trip" method="post" class="trip-form">
+            <div class="form-group">
+                <label for="destination">Destination:</label>
+                <input type="text" id="destination" name="destination" placeholder="Enter destination" required>
+            </div>
+            <div class="form-group">
+                <label for="activities">Select Activities:</label>
+                <select id="activities" name="activities" multiple required>
+                    <option value="adventure">Adventure</option>
+                    <option value="cultural">Cultural</option>
+                    <option value="relaxation">Relaxation</option>
+                    <option value="wildlife">Wildlife</option>
+                    <option value="beach">Beach</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="budget">Budget (USD):</label>
+                <input type="number" id="budget" name="budget" placeholder="Enter your budget" required>
+            </div>
+            <button type="submit" class="btn-primary">Generate Itinerary</button>
+        </form>
+    </div>
+</section>
+
+<style>
+.plan-trip {
+    text-align: center;
+    padding: 2rem 0;
+}
+.plan-trip h2 {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+}
+.trip-form {
+    max-width: 400px;
+    margin: auto;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+}
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.btn-primary {
+    padding: 0.75rem 1.5rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title if title else 'Tour Guide System' }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="fullpage-header">
+        <div class="hero">
+            <nav class="navbar">
+                <div class="container">
+                    <a href="/" class="logo">
+                        <img src="/static/images/logo.jpg" alt="Tour Guide System Logo">
+                    </a>
+                    <ul class="nav-links">
+                        <li><a href="/">Home</a></li>
+                        {% if session.get('user_id') %}
+                            <li><a href="/dashboard">Dashboard</a></li>
+                            <li><a href="/logout">Logout</a></li>
+                        {% else %}
+                            <li><a href="/login">Login</a></li>
+                            <li><a href="/register">Register</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+            <div class="hero-content">
+                <h1>Welcome to the Tour Guide System</h1>
+                <p>Your ultimate guide to discovering the wonders of Sri Lanka</p>
+                <a href="/plan_trip" class="btn-primary">Plan Your Trip</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Tour Guide System. All Rights Reserved.</p>
+            <ul class="social-links">
+                <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+            </ul>
+            <div class="contact-info">
+                <p><strong>Contact Us:</strong></p>
+                <p>Email: <a href="mailto:info@tourguidesystem.com">info@tourguidesystem.com</a></p>
+                <p>Phone: +94 123 456 789</p>
+                <p>Address: 123 Tourism St, Colombo, Sri Lanka</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

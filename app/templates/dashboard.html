@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Welcome, {{ user.name }}</h2>
+
+<form method="POST" action="{{ url_for('main.submit_preferences') }}">
+    <div>
+        <label for="start">Start Location:</label>
+        <input type="text" id="start" name="start" required>
+    </div>
+    <div>
+        <label for="end">End Location:</label>
+        <input type="text" id="end" name="end" required>
+    </div>
+    <div>
+        <label for="preferences">Preferences:</label>
+        <textarea id="preferences" name="preferences" rows="4"></textarea>
+    </div>
+    <button type="submit">Submit Preferences</button>
+</form>
+
+<div id="map" style="height: 500px; width: 100%;"></div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+{% endblock %}

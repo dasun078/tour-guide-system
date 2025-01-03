@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planned Trip</title>
+    <script src="https://www.bing.com/api/maps/mapcontrol?key=Your_Bing_Maps_API_Key" async defer></script>
+    <script>
+        function loadMap() {
+            var map = new Microsoft.Maps.Map('#myMap', {
+                center: new Microsoft.Maps.Location({{ coordinates[0] }}, {{ coordinates[1] }}),
+                zoom: 10
+            });
+
+            var pin = new Microsoft.Maps.Pushpin(map.getCenter(), {
+                title: '{{ destination }}'
+            });
+            map.entities.push(pin);
+        }
+    </script>
+</head>
+<body onload="loadMap()">
+    <h1>Your Planned Trip</h1>
+    <div id="myMap" style="width: 100%; height: 500px;"></div>
+    <a href="{{ url_for('main.dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

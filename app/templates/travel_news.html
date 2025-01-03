@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Travel News | Tour Guide System{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Travel News</h1>
+        <p>Stay updated on travel policies, events, and tips for a seamless journey.</p>
+    </div>
+</section>
+
+<section class="news">
+    <div class="container">
+        <h2>Latest Updates</h2>
+        <div class="news-grid">
+            <div class="news-item">
+                <img src="/static/images/policies1.jpg" alt="Travel Policies">
+                <h3><a href="https://www.immigrationlanka.com/info_guide-4-1.html" target="_blank">Updated Travel Policies</a></h3>
+                <p>Get the latest information on entry requirements and guidelines for travelers.</p>
+            </div>
+            <div class="news-item">
+                <img src="/static/images/events1.jpg" alt="Events">
+                <h3><a href="https://www.srilankaembassy.fr/en/page/142-events-and-festivals-sri-lanka" target="_blank">Upcoming Events</a></h3>
+                <p>Check out events and festivals happening across Sri Lanka.</p>
+            </div>
+            <div class="news-item">
+                <img src="/static/images/tips.jpg" alt="Travel Tips">
+                <h3>Essential Travel Tips</h3>
+                <p>Learn tips and tricks for a smoother and more enjoyable journey.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

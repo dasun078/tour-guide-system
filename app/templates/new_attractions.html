@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}New Attractions | Tour Guide System{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>New Attractions</h1>
+        <p>Explore newly introduced attractions and experiences in Sri Lanka.</p>
+    </div>
+</section>
+
+<section class="attractions">
+    <div class="container">
+        <h2>What's New</h2>
+        <div class="attractions-grid">
+            <div class="attraction-item">
+                <img src="/static/images/glamping1.jpg" alt="Glamping">
+                <img src="/static/images/glamping2.jpg" alt="Glamping">
+                <h3>Glamping Experiences</h3>
+                <p>Enjoy luxurious camping in scenic locations.</p>
+            </div>
+            <div class="attraction-item">
+                <img src="/static/images/aqua_sports1.jpg" alt="Water Sports">
+                <img src="/static/images/aqua_sports2.jpg" alt="Water Sports">
+                <h3>Water Sports</h3>
+                <p>Try out thrilling activities like jet skiing and kite surfing.</p>
+            </div>
+            <div class="attraction-item">
+                <img src="/static/images/cultural1.jpg" alt="Cultural Tours">
+                <img src="/static/images/cultural2.jpg" alt="Cultural Tours">
+                <h3>Cultural Tours</h3>
+                <p>Discover Sri Lanka's rich history and traditions.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
