@@ -3,25 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planned Trip</title>
-    <script src="https://www.bing.com/api/maps/mapcontrol?key=Your_Bing_Maps_API_Key" async defer></script>
-    <script>
-        function loadMap() {
-            var map = new Microsoft.Maps.Map('#myMap', {
-                center: new Microsoft.Maps.Location({{ coordinates[0] }}, {{ coordinates[1] }}),
-                zoom: 10
-            });
-
-            var pin = new Microsoft.Maps.Pushpin(map.getCenter(), {
-                title: '{{ destination }}'
-            });
-            map.entities.push(pin);
-        }
-    </script>
+    <title>Map View | Tour Guide System</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao&libraries=places&callback=initMap"></script>
 </head>
-<body onload="loadMap()">
-    <h1>Your Planned Trip</h1>
-    <div id="myMap" style="width: 100%; height: 500px;"></div>
-    <a href="{{ url_for('main.dashboard') }}">Back to Dashboard</a>
+<body>
+<header>
+    <div class="navbar">
+        <h1>Welcome, {{ user.name }}</h1>
+        <nav>
+            <ul>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/plan_trip">Plan a Trip</a></li>
+                <li><a href="/travel_news">Travel News</a></li>
+                <li><a href="/seasonal_favorites">Seasonal Favorites</a></li>
+                <li><a href="/new_attractions">New Attractions</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <!-- Map Section -->
+    <section class="map">
+        <h2>Your Preferred Route</h2>
+        <div id="map" style="width: 100%; height: 400px; border-radius: 8px;"></div>
+    </section>
+
+    <!-- Preferences Modal -->
+    <div id="preferences-modal" class="modal" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('preferences-modal')">&times;</span>
+            <h3>Set Your Preferences</h3>
+            <form action="/save_preferences" method="post">
+                <label for="preference">Preference:</label>
+                <input
+                    type="text"
+                    id="preference"
+                    name="preference"
+                    placeholder="Enter your preference"
+                    required>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('payment-modal')">&times;</span>
+            <h3>Available Payment Methods</h3>
+            <ul>
+                <li>Credit Card</li>
+                <li>PayPal</li>
+                <li>Google Pay</li>
+                <li>Apple Pay</li>
+            </ul>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2025 Tour Guide System. All rights reserved.</p>
+</footer>
+
+<script src="/static/js/map.js"></script>
+<script>
+    // Pass dynamic trip data to the script
+    const trips = [
+        {% for trip in trips %}
+        { lat: {{ trip.coordinates.lat }}, lng: {{ trip.coordinates.lng }}, title: "{{ trip.destination }}" },
+        {% endfor %}
+    ];
+
+    // Initialize the map with trip markers
+    window.onload = () => {
+        initMap(trips);
+    };
+</script>
 </body>
 </html>

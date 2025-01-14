@@ -9,19 +9,27 @@ bcrypt = Bcrypt()
 
 def create_app(config_name=None):
     app = Flask(__name__)
-    app.config.from_object(config_name or 'config.DevelopmentConfig')  
+    app.config.from_object(config_name or 'config.DevelopmentConfig')
 
     # Initialize extensions
     try:
         db.init_app(app)
         migrate.init_app(app, db)
         bcrypt.init_app(app)
-        print("Database initialized successfully.")
+        app.logger.info("Database initialized successfully.")
     except Exception as e:
         app.logger.error(f"Database connection error: {str(e)}")
 
-    # Register your blueprints
+    # Register blueprints
     from .routes import main_bp
     app.register_blueprint(main_bp)
+
+    # Create database tables
+    with app.app_context():
+        try:
+            db.create_all()
+            app.logger.info("Database tables created successfully.")
+        except Exception as e:
+            app.logger.error(f"Error creating database tables: {str(e)}")
 
     return app

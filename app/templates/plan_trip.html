@@ -5,76 +5,204 @@
 {% block content %}
 <section class="plan-trip">
     <div class="container">
-        <h2>Plan Your Trip</h2>
+        <h2>Plan Your Perfect Trip</h2>
+        <p class="subtitle">Fill in the details below to create a personalized itinerary.</p>
+        
         <form action="/plan_trip" method="post" class="trip-form">
+            <!-- Arrival and Departure Dates -->
             <div class="form-group">
-                <label for="destination">Destination:</label>
-                <input type="text" id="destination" name="destination" placeholder="Enter destination" required>
+                <label for="arrival-date">Date of Arrival:</label>
+                <input type="date" id="arrival-date" name="arrival_date" required>
             </div>
             <div class="form-group">
+                <label for="departure-date">Date of Departure:</label>
+                <input type="date" id="departure-date" name="departure_date" required>
+            </div>
+
+            <!-- Identity Details -->
+            <div class="form-group">
+                <label for="identity">Identity Document (Passport/NIC/Driver's License):</label>
+                <input type="text" id="identity" name="identity" placeholder="Enter your document number" required>
+            </div>
+
+            <!-- Number of Members -->
+            <div class="form-group">
+                <label for="members">Number of Members:</label>
+                <input type="number" id="members" name="members" placeholder="Enter number of members" required>
+            </div>
+
+            <!-- Multiple Destinations -->
+            <div class="form-group">
+                <label for="destinations">Destinations:</label>
+                <input type="text" id="destinations" name="destinations" placeholder="Enter destinations separated by commas" required>
+            </div>
+
+            <!-- Activities per Destination -->
+            <div class="form-group">
                 <label for="activities">Select Activities:</label>
-                <select id="activities" name="activities" multiple required>
+                <select id="activities" name="activities[]" multiple required>
                     <option value="adventure">Adventure</option>
                     <option value="cultural">Cultural</option>
                     <option value="relaxation">Relaxation</option>
                     <option value="wildlife">Wildlife</option>
                     <option value="beach">Beach</option>
                 </select>
+                <small class="note">Hold Ctrl (or Cmd on Mac) to select multiple options.</small>
             </div>
+
+            <!-- Budget -->
             <div class="form-group">
                 <label for="budget">Budget (USD):</label>
                 <input type="number" id="budget" name="budget" placeholder="Enter your budget" required>
             </div>
+
+            <!-- Route Map Preview -->
+            <div class="form-group">
+                <label>Route Preview:</label>
+                <div id="route-map" style="width: 100%; height: 300px;"></div>
+            </div>
+
+            <!-- Submit Button -->
             <button type="submit" class="btn-primary">Generate Itinerary</button>
         </form>
+
+        <!-- Itinerary Section -->
+        {% if itinerary %}
+        <section class="itinerary">
+            <h2>Your Itinerary</h2>
+            <ul>
+                {% for day, details in itinerary.items() %}
+                <li>
+                    <strong>Day {{ day }}:</strong>
+                    <p><strong>Destination:</strong> {{ details.destination }}</p>
+                    <p><strong>Activities:</strong> {{ details.activities | join(', ') }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
     </div>
 </section>
 
+<script>
+    // Initialize Google Map
+    function initMap() {
+        const map = new google.maps.Map(document.getElementById("route-map"), {
+            zoom: 7,
+            center: { lat: 7.8731, lng: 80.7718 }, // Centered on Sri Lanka
+        });
+
+        // Example markers
+        const destinations = [
+            { lat: 6.9271, lng: 79.8612, title: "Colombo" },
+            { lat: 7.2906, lng: 80.6337, title: "Kandy" },
+        ];
+
+        destinations.forEach(dest => {
+            new google.maps.Marker({
+                position: { lat: dest.lat, lng: dest.lng },
+                map: map,
+                title: dest.title,
+            });
+        });
+    }
+
+    // Initialize the map on page load
+    window.onload = initMap;
+</script>
+
 <style>
+/* General Layout */
 .plan-trip {
-    text-align: center;
     padding: 2rem 0;
+    background-color: #f5f5f5;
 }
-.plan-trip h2 {
-    margin-bottom: 1.5rem;
-    font-size: 2rem;
-}
-.trip-form {
-    max-width: 400px;
+.container {
+    max-width: 800px;
     margin: auto;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #fff;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
-.form-group {
+h2 {
+    color: #333;
     margin-bottom: 1rem;
+}
+.subtitle {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* Form Styling */
+.trip-form .form-group {
+    margin-bottom: 1.5rem;
     text-align: left;
 }
-.form-group label {
+.trip-form label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
+    color: #555;
 }
-.form-group input, .form-group select {
+.trip-form input, .trip-form select {
     width: 100%;
-    padding: 0.5rem;
+    padding: 0.75rem;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+.trip-form select[multiple] {
+    height: 100px;
+}
+.note {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #999;
 }
 .btn-primary {
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 2rem;
     background-color: #007bff;
     color: #fff;
     border: none;
-    border-radius: 4px;
-    text-decoration: none;
-    display: inline-block;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 1rem;
 }
 .btn-primary:hover {
     background-color: #0056b3;
 }
-</style>
 
+/* Route Map */
+#route-map {
+    margin-top: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Itinerary */
+.itinerary {
+    margin-top: 2rem;
+    text-align: left;
+}
+.itinerary h2 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+.itinerary ul {
+    list-style: none;
+    padding: 0;
+}
+.itinerary li {
+    background: #f9f9f9;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+</style>
 {% endblock %}

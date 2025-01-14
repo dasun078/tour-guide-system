@@ -14,22 +14,34 @@
             <nav class="navbar">
                 <div class="container">
                     <a href="/" class="logo">
-                        <img src="/static/images/logo.jpg" alt="Tour Guide System Logo">
+                        <img src="/static/images/logo.png" alt="Tour Guide System Logo">
                     </a>
                     <ul class="nav-links">
-                        <li><a href="/">Home</a></li>
+                        <li>
+                            <a href="/">
+                                <i class="fas fa-home"></i> Home
+                            </a>
+                        </li>
                         {% if session.get('user_id') %}
-                            <li><a href="/dashboard">Dashboard</a></li>
-                            <li><a href="/logout">Logout</a></li>
+                        <li><a href="/dashboard">Dashboard</a></li>
+                        <li><a href="/logout">Logout</a></li>
                         {% else %}
-                            <li><a href="/login">Login</a></li>
-                            <li><a href="/register">Register</a></li>
+                        <li>
+                            <a href="/login">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/register">
+                                <i class="fas fa-user-plus"></i> Register
+                            </a>
+                        </li>
                         {% endif %}
                     </ul>
                 </div>
             </nav>
             <div class="hero-content">
-                <h1>Welcome to the Tour Guide System</h1>
+                <h1 >Welcome to the Tour Guide System</h1>
                 <p>Your ultimate guide to discovering the wonders of Sri Lanka</p>
                 <a href="/plan_trip" class="btn-primary">Plan Your Trip</a>
             </div>

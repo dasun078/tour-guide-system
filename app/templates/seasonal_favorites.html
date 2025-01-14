@@ -1,35 +1,97 @@
 {% extends 'base.html' %}
 
-{% block title %}Seasonal Favorites | Tour Guide System{% endblock %}
+{% block title %}Seasonal Favourites{% endblock %}
 
 {% block content %}
-<section class="hero">
-    <div class="hero-content">
-        <h1>Seasonal Favorites</h1>
-        <p>Experience the best destinations for the current season.</p>
+<section class="hero" style="background-color: #004aad; color: white; padding: 2rem 0; text-align: center;">
+    <div class="hero-content" style="max-width: 1000px; margin: 0 auto;">
+        <h1 style="font-family: 'Lucida Handwriting', sans-serif; " font-size: 3rem; font-weight: 700; text-transform: uppercase; margin: 0; padding: 0.5rem 0;">
+            Seasonal Favourites
+        </h1>
+        <p style="font-size: 1.2rem; font-weight: 400; margin: 1rem auto 0; line-height: 1.6;">
+            Experience the best destinations for the current season
+        </p>
     </div>
 </section>
 
-<section class="seasonal">
+<section class="attractions">
     <div class="container">
-        <h2>Top Picks This Season</h2>
-        <div class="seasonal-grid">
-            <div class="seasonal-item">
-                <img src="/static/images/beach3.jpg" alt="Beaches">
-                <h3>Beaches</h3>
-                <p>Relax on the pristine beaches of the South Coast.</p>
+        <h2>Top Suggestions for this Season</h2>
+        <div class="attractions-grid">
+            <div class="attractions-card">
+                <div class="photo-row">
+                    <img src="/static/images/beach2.jpg" alt="Beaches">
+                    <img src="/static/images/beach3.jpg" alt="Beaches">
+                   
+                </div>
+                <div class="photo-row">
+                    <img src="/static/images/beach1.jpg" alt="Beaches">
+                    <img src="/static/images/beach4.jpg" alt="Beaches">
+                    
+                </div>
+                <h3>Sri Lanka's Beautiful Beaches: A Tropical Paradise</h3>
+                <ul>
+                    <li>-Diverse Beach Experiences</li>
+                    <li>-Snorkelling for an underwater experience</li>
+                    <li>-Learn and trying surfing on the beaches</li>
+                </ul>
             </div>
-            <div class="seasonal-item">
-                <img src="/static/images/hills1.jpg" alt="Hill Country">
-                <h3>Hill Country</h3>
-                <p>Explore the misty tea plantations and breathtaking views.</p>
+            <div class="attractions-card">
+                <div class="photo-row">
+                    <img src="/static/images/hill1.jpg" alt="Hills">
+                    <img src="/static/images/hill2.jpg" alt="Hills">
+                   
+                </div>
+                <div class="photo-row">
+                    <img src="/static/images/hill3.jpg" alt="Hills">
+                    <img src="/static/images/hill4.jpg" alt="Hills">
+                    
+                </div>
+                <h3>Sri Lanka's Majestic Hills: A Serene Escape</h3>
+                <ul>
+                    <li>-Scenic Landscapes and Tea Plantations</li>
+                    <li>-Adventure and Hiking Opportunities</li>
+                    <li>-Cool Climate and Biodiversity</li>
+                </ul>
             </div>
-            <div class="seasonal-item">
-                <img src="/static/images/safari1.jpg" alt="Wildlife Safari">
-                <h3>Wildlife Safari</h3>
-                <p>Discover Sri Lanka's rich wildlife in Yala and Wilpattu.</p>
+            <div class="attractions-card">
+                <div class="photo-row">
+                    <img src="/static/images/safari1.jpg" alt="Safari">
+                    <img src="/static/images/safari2.jpg" alt="Safari">
+                  
+                </div>
+                <div class="photo-row">
+                <img src="/static/images/safari3.jpg" alt="Safari">
+                <img src="/static/images/safari4.jpg" alt="Safari">
+                
+            </div>
+                <h3>Sri Lanka's Wild Safaris: Adventure in the Jungle</h3>
+                <ul>
+                    <li>-Rich Biodiversity and Unique Wildlife</li>
+                    <li>-Variety of Safari Experiences</li>
+                    <li>-Cultural and Natural Integration</li>
+                </ul>
             </div>
         </div>
     </div>
 </section>
+
+
+
+<section style="position: relative; height: 50px; margin-top: 0.5rem;">
+    <div style="position: absolute; bottom: 0; right: 10px;">
+        <a href="/new_attractions" style="font-size: 1rem; color: #004aad; text-decoration: none; font-weight: 600;">
+            >> Travel News
+        </a>
+    </div>
+</section>
+
+<section style="position: relative; height: 50px; margin-top: 0.5rem;">
+    <div style="position: absolute; bottom: 0; left: 10px;">
+        <a href="/travel_news" style="font-size: 1rem; color: #004aad; text-decoration: none; font-weight: 600;">
+            << New Attractions
+        </a>
+    </div>
+</section>
+
 {% endblock %}

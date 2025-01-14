@@ -1,35 +1,54 @@
 {% extends 'base.html' %}
 
-{% block title %}Travel News | Tour Guide System{% endblock %}
+{% block title %}Travel News{% endblock %}
 
 {% block content %}
-<section class="hero">
-    <div class="hero-content">
-        <h1>Travel News</h1>
-        <p>Stay updated on travel policies, events, and tips for a seamless journey.</p>
+<section class="hero" style="background-color: #004aad; color: white; padding: 2rem 0; text-align: center;">
+    <div class="hero-content" style="max-width: 1000px; margin: 0 auto;">
+        <h1 style= "font-family: 'Lucida Handwriting', sans-serif; "font-size: 3rem; font-weight: 700; text-transform: uppercase; margin: 0; padding: 0.5rem 0;">
+            Travel News
+        </h1>
+        <p style="font-size: 1.2rem; font-weight: 400; margin: 1rem auto 0; line-height: 1.6;">
+            Stay updated on travel policies, events, and tips for a seamless journey.
+        </p>
     </div>
 </section>
 
-<section class="news">
+<section class="attractions">
     <div class="container">
-        <h2>Latest Updates</h2>
-        <div class="news-grid">
-            <div class="news-item">
-                <img src="/static/images/policies1.jpg" alt="Travel Policies">
-                <h3><a href="https://www.immigrationlanka.com/info_guide-4-1.html" target="_blank">Updated Travel Policies</a></h3>
-                <p>Get the latest information on entry requirements and guidelines for travelers.</p>
+        <h2>Preparing you for the travel</h2>
+        <div class="attractions-grid">
+            <div class="attractions-card">
+                <img src="/static/images/policies1.jpg" alt="Policies">
+                <h3><a href="https://www.immigrationlanka.com/info_guide-4-1.html" target="_blank">Travel Policy</a></h3>
+                <ul>
+                    <li>Get the latest information on entry requirements and guidelines for travelers.</li>
+                </ul>
             </div>
-            <div class="news-item">
+            <div class="attractions-card">
                 <img src="/static/images/events1.jpg" alt="Events">
-                <h3><a href="https://www.srilankaembassy.fr/en/page/142-events-and-festivals-sri-lanka" target="_blank">Upcoming Events</a></h3>
-                <p>Check out events and festivals happening across Sri Lanka.</p>
+                <h3><a href="https://www.srilankaembassy.fr/en/page/142-events-and-festivals-sri-lanka" target="_blank">Events</a></h3>
+                <ul>
+                    <li>Check out events and festivals happening across Sri Lanka</li>
+                </ul>
             </div>
-            <div class="news-item">
-                <img src="/static/images/tips.jpg" alt="Travel Tips">
-                <h3>Essential Travel Tips</h3>
-                <p>Learn tips and tricks for a smoother and more enjoyable journey.</p>
+            <div class="attractions-card">
+                <img src="/static/images/safari1.jpg" alt="Travel Tips">
+                <h3>Travel Tips</h3>
+                <ul>
+                    <li>Learn tips and tricks for a smoother and more enjoyable journey</li>
+                </ul>
             </div>
         </div>
     </div>
 </section>
+
+<section style="position: relative; height: 50px; margin-top: 0.5rem;">
+    <div style="position: absolute; bottom: 0; left: 10px;">
+        <a href="/seasonal_favorites" style="font-size: 1rem; color: #004aad; text-decoration: none; font-weight: 600;">
+            << Seasonal Favoruites
+        </a>
+    </div>
+</section>
+
 {% endblock %}

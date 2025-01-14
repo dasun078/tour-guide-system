@@ -1,23 +1,77 @@
-{% extends 'base.html' %}
-
-{% block title %}Login | Tour Guide System{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% block title %}Login | Tour Guide System{% endblock
+%} {% block content %}
 <section class="login">
-    <div class="container">
-        <h2>Login to Your Account</h2>
-        <form action="/login" method="post">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-            </div>
-            <button type="submit">Login</button>
-        </form>
-        <p>Don't have an account? <a href="/register">Sign up here</a>.</p>
+  <div class="container login-container">
+    <!-- Logo Section -->
+    <div class="logo">
+      <img src="/static/images/logo.png" alt="Tour Guide System Logo" />
     </div>
+    <!-- Login Form -->
+    <h2>Login to Your Account</h2>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
+    <form action="{{ url_for('main.login') }}" method="post" class="login-form">
+      <!-- Add the CSRF token here -->
+      {{ form.hidden_tag() }}
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your email"
+          required
+        />
+        <!-- Display email validation errors -->
+        {% if form.email.errors %}
+        <div class="error-message">
+          {% for error in form.email.errors %}
+          <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your password"
+          required
+        />
+        <!-- Display password validation errors -->
+        {% if form.password.errors %}
+        <div class="error-message">
+          {% for error in form.password.errors %}
+          <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn-primary">Login</button>
+    </form>
+
+    <!-- Signup Link -->
+    <p class="signup-link">
+      Don't have an account?
+      <a href="{{ url_for('main.register') }}">Sign up here</a>.
+    </p>
+  </div>
 </section>
 {% endblock %}

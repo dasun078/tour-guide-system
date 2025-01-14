@@ -1,11 +1,18 @@
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 class Config:
     """Base configuration shared across all environments."""
-    SECRET_KEY = os.environ.get('SECRET_KEY', '123456789')  # Ensure you replace it with a secure key
-    SQLALCHEMY_TRACK_MODIFICATIONS = False  # Disable SQLAlchemy event system for performance
-    SESSION_TYPE = 'filesystem'  # Flask-Session configuration
-    GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', 'your_default_google_maps_api_key')
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SESSION_TYPE = 'filesystem'
+    GOOGLE_MAPS_API_KEY = os.environ.get('AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao&libraries=places&callback=initMap')
+    
+    # Use the database URL directly from environment variable
+    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
 
     @staticmethod
     def init_app(app):
@@ -15,41 +22,47 @@ class Config:
 
 class DevelopmentConfig(Config):
     """Configuration for development environment."""
-    DEBUG = True  # Enable debug mode for detailed error pages
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'SQLALCHEMY_DATABASE_URI',
-        'mysql+pymysql://root:Dasun@070@127.0.0.1:3306/tour_guide_system'
-    )  # Default database URL for development
+    DEBUG = True
 
 
 class TestingConfig(Config):
     """Configuration for testing environment."""
-    TESTING = True  # Enable testing mode
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'  # Use in-memory SQLite for faster tests
-    WTF_CSRF_ENABLED = False  # Disable CSRF protection for easier testing of forms
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    WTF_CSRF_ENABLED = False
     DEBUG = True
 
 
 class ProductionConfig(Config):
     """Configuration for production environment."""
-    DEBUG = False  # Ensure debug mode is off in production
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'SQLALCHEMY_DATABASE_URI',
-        'mysql+pymysql://root:Dasun@070@127.0.0.1:3306/tour_guide_system'
-    )  # Database URL for production environment
+    DEBUG = False
 
-    @staticmethod
-    def init_app(app):
-        """Configure production-specific behavior."""
+    @classmethod
+    def init_app(cls, app):
+        Config.init_app(app)
+        
         import logging
         from logging.handlers import RotatingFileHandler
 
-        # Set up logging for production
         if not os.path.exists('logs'):
             os.mkdir('logs')
+            
         file_handler = RotatingFileHandler('logs/error.log', maxBytes=10240, backupCount=10)
+        file_handler.setFormatter(logging.Formatter(
+            '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+        ))
         file_handler.setLevel(logging.ERROR)
         app.logger.addHandler(file_handler)
+
+        info_handler = RotatingFileHandler('logs/info.log', maxBytes=10240, backupCount=10)
+        info_handler.setFormatter(logging.Formatter(
+            '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+        ))
+        info_handler.setLevel(logging.INFO)
+        app.logger.addHandler(info_handler)
+
+        app.logger.setLevel(logging.INFO)
+        app.logger.info('Tour Guide System startup')
 
 
 # Map environment names to configuration classes
@@ -57,5 +70,5 @@ config = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,
     'production': ProductionConfig,
-    'default': DevelopmentConfig  # Default configuration if no environment is specified
+    'default': DevelopmentConfig
 }

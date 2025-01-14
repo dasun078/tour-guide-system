@@ -1,38 +1,70 @@
 {% extends 'base.html' %}
 
-{% block title %}New Attractions | Tour Guide System{% endblock %}
+{% block title %}Travel News{% endblock %}
 
 {% block content %}
-<section class="hero">
-    <div class="hero-content">
-        <h1>New Attractions</h1>
-        <p>Explore newly introduced attractions and experiences in Sri Lanka.</p>
+<section class="hero" style="background-color: #004aad; color: white; padding: 2rem 0; text-align: center;">
+    <div class="hero-content" style="max-width: 1000px; margin: 0 auto;">
+        <h1 style= "font-family: 'Lucida Handwriting', sans-serif; "font-size: 3rem; font-weight: 700; text-transform: uppercase; margin: 0; padding: 0.5rem 0;">
+            New Attractions
+        </h1>
+        <p style="font-size: 1.2rem; font-weight: 400; margin: 1rem auto 0; line-height: 1.6;">
+            Explore newly introduced attractions and experiences in Sri Lanka.
+        </p>
     </div>
 </section>
 
 <section class="attractions">
     <div class="container">
-        <h2>What's New</h2>
+        <h2>What's New?</h2>
         <div class="attractions-grid">
-            <div class="attraction-item">
-                <img src="/static/images/glamping1.jpg" alt="Glamping">
-                <img src="/static/images/glamping2.jpg" alt="Glamping">
-                <h3>Glamping Experiences</h3>
-                <p>Enjoy luxurious camping in scenic locations.</p>
+            <div class="attractions-card">
+                <div class="photo-row">
+                    <video src="/static/videos/ski1.mp4" alt="Beaches" controls muted autoplay loop></video>
+                    <video src="/static/videos/ski2.mp4" alt="Beaches" controls muted autoplay loop></video>
+                </div>
+                <h3>Skydiving in Sri Lanka: A Thrill-Seeker's Paradise!</h3>
+                <ul>
+                    <li>Experience the thrill of jumping from thousands of feet above, with panoramic views of lush greenery, beaches, and tea plantations. 
+                    Skydiving events are occasionally held in Colombo and coastal areas, guided by certified professionals with top-notch safety equipment for
+                    an unforgettable adventure.</li>
+                </ul>
             </div>
-            <div class="attraction-item">
-                <img src="/static/images/aqua_sports1.jpg" alt="Water Sports">
-                <img src="/static/images/aqua_sports2.jpg" alt="Water Sports">
-                <h3>Water Sports</h3>
-                <p>Try out thrilling activities like jet skiing and kite surfing.</p>
+            <div class="attractions-card">
+                <div class="photo-row">
+                    <video src="/static/videos/water1.mp4" alt="Hills" controls muted autoplay loop></video>
+                    <video src="/static/videos/water2.mp4" alt="Hills" controls muted autoplay loop></video>
+                </div>
+                <h3>Water Sports in Sri Lanka: Dive into Adventure!</h3>
+                <ul>
+                    <li>Enjoy surfing in Arugam Bay, rafting in Kitulgala, snorkeling at Pigeon Island, diving in Unawatuna, kite surfing in Kalpitiya, and more. 
+                    Perfect for adventure and relaxation, with activities available year-round amidst stunning tropical landscapes!</li>
+                </ul>
             </div>
-            <div class="attraction-item">
-                <img src="/static/images/cultural1.jpg" alt="Cultural Tours">
-                <img src="/static/images/cultural2.jpg" alt="Cultural Tours">
-                <h3>Cultural Tours</h3>
-                <p>Discover Sri Lanka's rich history and traditions.</p>
+            <div class="attractions-card">
+                <div class="photo-row">
+                    <video src="/static/videos/ab1.mp4" alt="Safari" controls muted autoplay loop></video>
+                    <video src="/static/videos/ab2.mp4" alt="Safari" controls muted autoplay loop></video>
+                </div>
+                <h3>Abseiling in Sri Lanka: A Thrilling Adventure Awaits!</h3>
+                <ul>
+                    <li>Abseiling in Sri Lanka offers an exciting adventure amidst stunning natural landscapes. Top spots include Kitulgala, Ella, Knuckles Mountain Range, and 
+                    Bambarakanda Falls, each providing thrilling descents alongside breathtaking views. Guided by certified operators, abseiling is safe and accessible, with the 
+                    best times being during the dry seasons. It's a must-try experience for adventure enthusiasts visiting this tropical paradise!</li>
+                </ul>
             </div>
         </div>
     </div>
 </section>
+
+<section style="position: relative; height: 50px; margin-top: 0.5rem;">
+    <div style="position: absolute; bottom: 0; right: 10px;">
+        <a href="/seasonal_favorites" style="font-size: 1rem; color: #004aad; text-decoration: none; font-weight: 600;">
+            >> Seasonal Favourites
+        </a>
+    </div>
+</section>
+
+
+
 {% endblock %}
