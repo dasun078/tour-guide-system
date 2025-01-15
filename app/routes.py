@@ -106,32 +106,59 @@ def dashboard():
 
 @main_bp.route('/plan_trip', methods=['GET', 'POST'])
 def plan_trip():
-    """Plan a trip with AI recommendations."""
+    """Plan a trip with detailed user inputs and AI recommendations."""
     user = current_user()
     if not user:
         flash('Please log in to plan a trip.', 'warning')
         return redirect(url_for('main.login'))
 
-    form = TripForm()
-    if form.validate_on_submit():
+    if request.method == 'POST':
         try:
+            # Retrieve form data
+            arrival_date = request.form.get('arrival_date')
+            departure_date = request.form.get('departure_date')
+            passport_number = request.form.get('passport_number')
+            phone_number = request.form.get('phone_number')
+            number_of_people = request.form.get('number_of_people')
+            destinations = request.form.get('destinations')
+            activities = request.form.getlist('activities')
+            budget = request.form.get('budget')
+            hotel = request.form.get('hotel')
+
+            # Validate required fields
+            if not (arrival_date and departure_date and passport_number and phone_number and destinations and budget and hotel):
+                flash('Please fill in all required fields.', 'danger')
+                return redirect(url_for('main.plan_trip'))
+
+            # Create a new trip entry
             trip = Trip(
                 user_id=user.id,
-                destination=form.destination.data,
-                activities=form.activities.data,
-                budget=form.budget.data,
-                trip_date=form.trip_date.data
+                arrival_date=arrival_date,
+                departure_date=departure_date,
+                passport_number=passport_number,
+                phone_number=phone_number,
+                number_of_people=int(number_of_people),
+                destination=destinations,
+                activities=", ".join(activities),
+                budget=float(budget),
+                hotel=hotel
             )
             db.session.add(trip)
             db.session.commit()
+
             flash('Trip planned successfully!', 'success')
-            logger.info(f"Trip created: {trip}")
+            logger.info(f"Trip planned by user {user.id}: {trip}")
             return redirect(url_for('main.dashboard'))
+
         except Exception as e:
             db.session.rollback()
-            flash(f"Error planning trip: {e}", 'danger')
-            logger.error(f"Error creating trip: {e}")
-    return render_template('plan_trip.html', form=form)
+            logger.error(f"Error planning trip: {e}")
+            flash('An error occurred while planning your trip. Please try again.', 'danger')
+
+    # Mock hotel suggestions (to be replaced with dynamic AI suggestions if needed)
+    hotel_suggestions = ["Hotel Colombo", "Kandy Hills Resort", "Sigiriya Haven", "Ella Green View"]
+
+    return render_template('plan_trip.html', user=user, hotel_suggestions=hotel_suggestions)
 
 @main_bp.route('/payments', methods=['GET', 'POST'])
 def payments():

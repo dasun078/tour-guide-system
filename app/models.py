@@ -1,7 +1,6 @@
 from . import db
 from datetime import datetime
 
-
 class User(db.Model):
     """User model representing application users."""
     __tablename__ = 'users'
@@ -22,37 +21,36 @@ class User(db.Model):
     def __repr__(self):
         return f"<User {self.name} ({self.email})>"
 
-
 class Trip(db.Model):
     """Trip model for managing user-planned trips."""
     __tablename__ = 'trips'
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    destination = db.Column(db.String(100), nullable=False)
-    activities = db.Column(db.Text, nullable=True)
-    budget = db.Column(db.Float, nullable=True)
-    trip_date = db.Column(db.Date, nullable=True)
+    arrival_date = db.Column(db.Date, nullable=False)
+    departure_date = db.Column(db.Date, nullable=False)
+    passport_number = db.Column(db.String(50), nullable=False)
+    phone_number = db.Column(db.String(15), nullable=False)
+    number_of_people = db.Column(db.Integer, nullable=False)
+    destinations = db.relationship('Destination', backref='trip', lazy=True, cascade="all, delete-orphan")
+    hotel = db.Column(db.String(100), nullable=False)
+    budget = db.Column(db.Float, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    coordinates = db.Column(db.String(100), nullable=True)  # New field for storing coordinates
-    feedbacks = db.relationship('Feedback', backref='trip', lazy=True, cascade="all, delete-orphan")
-    tour_plan = db.relationship('TourPlan', backref='trip', lazy=True, uselist=False, cascade="all, delete-orphan")
-    payments = db.relationship('Payment', backref='trip', lazy=True, cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f"<Trip to {self.destination} by User {self.user_id}>"
+        return f"<Trip by User {self.user_id} with budget {self.budget}>"
 
-    @property
-    def lat_lng(self):
-        """Splits coordinates into latitude and longitude."""
-        if self.coordinates:
-            try:
-                lat, lng = map(float, self.coordinates.split(","))
-                return {"lat": lat, "lng": lng}
-            except ValueError:
-                return None
-        return None
+class Destination(db.Model):
+    """Model to store destinations and activities for trips."""
+    __tablename__ = 'destinations'
 
+    id = db.Column(db.Integer, primary_key=True)
+    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
+    destination_name = db.Column(db.String(100), nullable=False)
+    activities = db.Column(db.Text, nullable=False)
+
+    def __repr__(self):
+        return f"<Destination {self.destination_name} for Trip {self.trip_id}>"
 
 class Feedback(db.Model):
     """Feedback model to collect user feedback for trips."""
@@ -68,7 +66,6 @@ class Feedback(db.Model):
     def __repr__(self):
         return f"<Feedback by User {self.user_id} for Trip {self.trip_id}>"
 
-
 class UserPreference(db.Model):
     """Model to store user preferences for generating personalized tour plans."""
     __tablename__ = 'user_preferences'
@@ -79,7 +76,6 @@ class UserPreference(db.Model):
 
     def __repr__(self):
         return f"<UserPreference {self.preference} for User {self.user_id}>"
-
 
 class TourPlan(db.Model):
     """Model for storing generated tour plans."""
@@ -92,7 +88,6 @@ class TourPlan(db.Model):
 
     def __repr__(self):
         return f"<TourPlan for Trip {self.trip_id}>"
-
 
 class Payment(db.Model):
     """Model to track payments for trips."""
@@ -107,7 +102,6 @@ class Payment(db.Model):
 
     def __repr__(self):
         return f"<Payment {self.amount} for Trip {self.trip_id} by User {self.user_id}>"
-
 
 class Notification(db.Model):
     """Model to store user notifications."""

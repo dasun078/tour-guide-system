@@ -56,6 +56,12 @@ CREATE TABLE trips (
   activities TEXT NULL,
   budget DECIMAL(10,2) NULL,
   trip_date DATE NULL,
+  arrival_date DATE NULL,
+  departure_date DATE NULL,
+  passport_number VARCHAR(50) NULL,
+  phone_number VARCHAR(15) NULL,
+  number_of_people INT NULL,
+  hotel VARCHAR(100) NOT NULL,
   created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   coordinates VARCHAR(100) NULL,
   PRIMARY KEY (id),
@@ -169,7 +175,11 @@ SELECT
   t.destination, 
   t.trip_date, 
   t.budget, 
-  t.coordinates
+  t.coordinates,
+  t.arrival_date,
+  t.departure_date,
+  t.number_of_people,
+  t.hotel
 FROM users u
 JOIN trips t ON u.id = t.user_id;
 
