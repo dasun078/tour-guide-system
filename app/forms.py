@@ -1,5 +1,17 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, FloatField, DateField, BooleanField, SelectField
+from wtforms import (
+    StringField,
+    PasswordField,
+    SubmitField,
+    TextAreaField,
+    FloatField,
+    DateField,
+    BooleanField,
+    SelectField,
+    IntegerField,
+    FieldList,
+    FormField
+)
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional, NumberRange
 
 
@@ -54,36 +66,89 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 
-class TripForm(FlaskForm):
-    """Form for planning a trip."""
+class DestinationForm(FlaskForm):
+    """Subform for destinations in the trip."""
     destination = StringField(
         'Destination',
         validators=[
             DataRequired(message="Destination is required."),
-            Length(min=2, max=100, message="Destination must be between 2 and 100 characters.")
+            Length(max=100, message="Destination name must be 100 characters or less.")
         ]
     )
     activities = TextAreaField(
         'Activities',
         validators=[
             Optional(),
-            Length(max=500, message="Activities description must be 500 characters or less.")
+            Length(max=500, message="Activities must be 500 characters or less.")
+        ]
+    )
+    travel_mode = SelectField(
+        'Travel Mode',
+        choices=[
+            ('', '-- Choose Mode of Transport --'),
+            ('Bus', 'Bus'),
+            ('Train', 'Train'),
+            ('Tuk Tuk', 'Tuk Tuk'),
+            ('Car', 'Car'),
+            ('Van', 'Van')
+        ],
+        validators=[DataRequired(message="Travel mode is required.")]
+    )
+
+
+class TripForm(FlaskForm):
+    """Form for planning a trip."""
+    arrival_date = DateField(
+        'Date of Arrival',
+        validators=[DataRequired(message="Arrival date is required.")],
+        format='%Y-%m-%d'
+    )
+    departure_date = DateField(
+        'Date of Departure',
+        validators=[DataRequired(message="Departure date is required.")],
+        format='%Y-%m-%d'
+    )
+    passport_number = StringField(
+        'Passport Number',
+        validators=[
+            DataRequired(message="Passport number is required."),
+            Length(min=5, max=50, message="Passport number must be between 5 and 50 characters.")
+        ]
+    )
+    phone_number = StringField(
+        'Phone Number',
+        validators=[
+            DataRequired(message="Phone number is required."),
+            Length(min=10, max=15, message="Phone number must be between 10 and 15 digits.")
+        ]
+    )
+    number_of_people = IntegerField(
+        'Number of People',
+        validators=[
+            DataRequired(message="Number of people is required."),
+            NumberRange(min=1, message="At least 1 person is required.")
+        ]
+    )
+    destinations = FieldList(
+        FormField(DestinationForm),
+        min_entries=1,
+        label="Destinations"
+    )
+    hotel = StringField(
+        'Preferred Hotel',
+        validators=[
+            Optional(),
+            Length(max=100, message="Hotel name must be 100 characters or less.")
         ]
     )
     budget = FloatField(
-        'Budget',
+        'Budget (USD)',
         validators=[
-            Optional(),
+            DataRequired(message="Budget is required."),
             NumberRange(min=0, message="Budget must be a positive number.")
         ]
     )
-    trip_date = DateField(
-        'Date',
-        validators=[Optional()],
-        format='%Y-%m-%d',
-        description="Enter a date in the format YYYY-MM-DD."
-    )
-    submit = SubmitField('Plan Trip')
+    submit = SubmitField('Generate Itinerary')
 
 
 class FeedbackForm(FlaskForm):

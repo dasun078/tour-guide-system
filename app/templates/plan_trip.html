@@ -21,45 +21,52 @@
 
             <!-- Identity Details -->
             <div class="form-group">
-                <label for="identity">Identity Document (Passport/NIC/Driver's License):</label>
-                <input type="text" id="identity" name="identity" placeholder="Enter your document number" required>
+                <label for="passport">Passport Number:</label>
+                <input type="text" id="passport" name="passport" placeholder="Enter your passport number" required>
             </div>
-
-            <!-- Number of Members -->
             <div class="form-group">
-                <label for="members">Number of Members:</label>
-                <input type="number" id="members" name="members" placeholder="Enter number of members" required>
+                <label for="phone">Phone Number:</label>
+                <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
+            </div>
+            <div class="form-group">
+                <label for="members">Number of People Accompanying:</label>
+                <input type="number" id="members" name="members" placeholder="Enter number of people" required>
             </div>
 
             <!-- Multiple Destinations -->
-            <div class="form-group">
-                <label for="destinations">Destinations:</label>
-                <input type="text" id="destinations" name="destinations" placeholder="Enter destinations separated by commas" required>
+            <div id="destinations-container">
+                <label>Destinations:</label>
+                <div class="form-group">
+                    <input type="text" name="destinations[]" placeholder="Enter destination" required>
+                    <textarea name="activities[]" placeholder="Enter activities for this destination" required></textarea>
+                    <label for="travel-mode">Travel Mode:</label>
+                    <select name="travel_modes[]" required>
+                        <option value="">-- Choose Mode of Transport --</option>
+                        <option value="Bus">Bus</option>
+                        <option value="Train">Train</option>
+                        <option value="Tuk Tuk">Tuk Tuk</option>
+                        <option value="Car">Car</option>
+                        <option value="Van">Van</option>
+                    </select>
+                </div>
             </div>
+            <button type="button" id="add-destination" class="btn-secondary">Add Destination</button>
 
-            <!-- Activities per Destination -->
+            <!-- Hotel Selection -->
             <div class="form-group">
-                <label for="activities">Select Activities:</label>
-                <select id="activities" name="activities[]" multiple required>
-                    <option value="adventure">Adventure</option>
-                    <option value="cultural">Cultural</option>
-                    <option value="relaxation">Relaxation</option>
-                    <option value="wildlife">Wildlife</option>
-                    <option value="beach">Beach</option>
+                <label for="hotel">Select Hotel:</label>
+                <select id="hotel" name="hotel" required>
+                    <option value="">-- Choose a Hotel --</option>
+                    <option value="Hotel A">Hotel A</option>
+                    <option value="Hotel B">Hotel B</option>
+                    <option value="Hotel C">Hotel C</option>
                 </select>
-                <small class="note">Hold Ctrl (or Cmd on Mac) to select multiple options.</small>
             </div>
 
             <!-- Budget -->
             <div class="form-group">
                 <label for="budget">Budget (USD):</label>
                 <input type="number" id="budget" name="budget" placeholder="Enter your budget" required>
-            </div>
-
-            <!-- Route Map Preview -->
-            <div class="form-group">
-                <label>Route Preview:</label>
-                <div id="route-map" style="width: 100%; height: 300px;"></div>
             </div>
 
             <!-- Submit Button -->
@@ -76,6 +83,8 @@
                     <strong>Day {{ day }}:</strong>
                     <p><strong>Destination:</strong> {{ details.destination }}</p>
                     <p><strong>Activities:</strong> {{ details.activities | join(', ') }}</p>
+                    <p><strong>Travel Mode:</strong> {{ details.travel_mode }}</p>
+                    <p><strong>Hotel:</strong> {{ details.hotel }}</p>
                 </li>
                 {% endfor %}
             </ul>
@@ -85,30 +94,25 @@
 </section>
 
 <script>
-    // Initialize Google Map
-    function initMap() {
-        const map = new google.maps.Map(document.getElementById("route-map"), {
-            zoom: 7,
-            center: { lat: 7.8731, lng: 80.7718 }, // Centered on Sri Lanka
-        });
-
-        // Example markers
-        const destinations = [
-            { lat: 6.9271, lng: 79.8612, title: "Colombo" },
-            { lat: 7.2906, lng: 80.6337, title: "Kandy" },
-        ];
-
-        destinations.forEach(dest => {
-            new google.maps.Marker({
-                position: { lat: dest.lat, lng: dest.lng },
-                map: map,
-                title: dest.title,
-            });
-        });
-    }
-
-    // Initialize the map on page load
-    window.onload = initMap;
+    document.getElementById('add-destination').addEventListener('click', function () {
+        const container = document.getElementById('destinations-container');
+        const newDestination = document.createElement('div');
+        newDestination.className = 'form-group';
+        newDestination.innerHTML = `
+            <input type="text" name="destinations[]" placeholder="Enter destination" required>
+            <textarea name="activities[]" placeholder="Enter activities for this destination" required></textarea>
+            <label for="travel-mode">Travel Mode:</label>
+            <select name="travel_modes[]" required>
+                <option value="">-- Choose Mode of Transport --</option>
+                <option value="Bus">Bus</option>
+                <option value="Train">Train</option>
+                <option value="Tuk Tuk">Tuk Tuk</option>
+                <option value="Car">Car</option>
+                <option value="Van">Van</option>
+            </select>
+        `;
+        container.appendChild(newDestination);
+    });
 </script>
 
 <style>
@@ -147,15 +151,15 @@ h2 {
     font-weight: bold;
     color: #555;
 }
-.trip-form input, .trip-form select {
+.trip-form input, .trip-form select, .trip-form textarea {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
 }
-.trip-form select[multiple] {
-    height: 100px;
+.trip-form textarea {
+    height: 80px;
 }
 .note {
     display: block;
@@ -176,11 +180,17 @@ h2 {
     background-color: #0056b3;
 }
 
-/* Route Map */
-#route-map {
-    margin-top: 1rem;
-    border: 1px solid #ddd;
+.btn-secondary {
+    padding: 0.5rem 1.5rem;
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
     border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.btn-secondary:hover {
+    background-color: #5a6268;
 }
 
 /* Itinerary */

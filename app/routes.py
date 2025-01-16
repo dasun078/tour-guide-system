@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.models import db, User, Trip, UserPreference
+from app.models import db, User, Trip, Destination, UserPreference
 from app.forms import RegistrationForm, LoginForm, TripForm
 import logging
 
@@ -55,7 +55,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
 
-        # Admin access
+        # Admin login
         if form.email.data == 'dasungunarathned15@gmail.com' and form.password.data == 'Dasun@123':
             admin_user = User.query.filter_by(email='dasungunarathned15@gmail.com').first()
             if not admin_user:
@@ -106,32 +106,73 @@ def dashboard():
 
 @main_bp.route('/plan_trip', methods=['GET', 'POST'])
 def plan_trip():
-    """Plan a trip with AI recommendations."""
+    """Plan a trip with detailed user inputs and travel modes."""
     user = current_user()
     if not user:
         flash('Please log in to plan a trip.', 'warning')
         return redirect(url_for('main.login'))
 
-    form = TripForm()
-    if form.validate_on_submit():
+    if request.method == 'POST':
         try:
+            arrival_date = request.form.get('arrival_date')
+            departure_date = request.form.get('departure_date')
+            passport_number = request.form.get('passport_number')
+            phone_number = request.form.get('phone_number')
+            number_of_people = request.form.get('number_of_people')
+            destinations = request.form.getlist('destinations[]')
+            activities = request.form.getlist('activities[]')
+            travel_modes = request.form.getlist('travel_modes[]')
+            budget = request.form.get('budget')
+            hotel = request.form.get('hotel')
+
+            if not (arrival_date and departure_date and passport_number and phone_number and destinations and budget and hotel):
+                flash('Please fill in all required fields.', 'danger')
+                return redirect(url_for('main.plan_trip'))
+
             trip = Trip(
                 user_id=user.id,
-                destination=form.destination.data,
-                activities=form.activities.data,
-                budget=form.budget.data,
-                trip_date=form.trip_date.data
+                arrival_date=arrival_date,
+                departure_date=departure_date,
+                passport_number=passport_number,
+                phone_number=phone_number,
+                number_of_people=int(number_of_people),
+                hotel=hotel,
+                budget=float(budget)
             )
             db.session.add(trip)
+            db.session.flush()
+
+            for destination, activity, travel_mode in zip(destinations, activities, travel_modes):
+                destination_entry = Destination(
+                    trip_id=trip.id,
+                    destination_name=destination,
+                    activities=activity,
+                    travel_mode=travel_mode
+                )
+                db.session.add(destination_entry)
+
             db.session.commit()
             flash('Trip planned successfully!', 'success')
-            logger.info(f"Trip created: {trip}")
+            logger.info(f"Trip planned by user {user.id}: {trip}")
             return redirect(url_for('main.dashboard'))
+
         except Exception as e:
             db.session.rollback()
-            flash(f"Error planning trip: {e}", 'danger')
-            logger.error(f"Error creating trip: {e}")
-    return render_template('plan_trip.html', form=form)
+            logger.error(f"Error planning trip: {e}")
+            flash('An error occurred while planning your trip. Please try again.', 'danger')
+
+    hotel_suggestions = ["Hotel Colombo", "Kandy Hills Resort", "Sigiriya Haven", "Ella Green View"]
+
+    return render_template('plan_trip.html', user=user, hotel_suggestions=hotel_suggestions)
+
+@main_bp.route('/logout')
+def logout():
+    """User logout."""
+    session.pop('user_id', None)
+    session.pop('is_admin', None)
+    flash('Logged out successfully.', 'info')
+    logger.info("User logged out.")
+    return redirect(url_for('main.home'))
 
 @main_bp.route('/payments', methods=['GET', 'POST'])
 def payments():
@@ -149,7 +190,6 @@ def payments():
             cvv = request.form.get('cvv')
             amount = float(request.form.get('amount', 0.0))
 
-            # Validate input
             if not all([payment_method, card_number, expiry_date, cvv, amount]):
                 flash('All fields are required for payment.', 'danger')
                 return redirect(url_for('main.payments'))
@@ -162,22 +202,6 @@ def payments():
             flash('Error processing payment. Please try again.', 'danger')
 
     return render_template('payments.html', user=user)
-
-@main_bp.route('/map')
-def map_view():
-    """Render the route map with user trip data."""
-    user = current_user()
-    if not user:
-        flash('Please log in to access the map.', 'warning')
-        return redirect(url_for('main.login'))
-
-    trips = Trip.query.filter_by(user_id=user.id).all()
-    if not trips:
-        flash('No trips found. Please plan a trip first.', 'info')
-        return redirect(url_for('main.plan_trip'))
-
-    logger.debug(f"Rendering map for user {user.id} with trips: {trips}")
-    return render_template('map.html', user=user, trips=trips)
 
 @main_bp.route('/save_preferences', methods=['POST'])
 def save_preferences():
@@ -220,27 +244,20 @@ def recommend_destinations():
     logger.debug(f"Recommended destinations for user {user.id}: {filtered_recommendations}")
     return jsonify(filtered_recommendations), 200
 
-@main_bp.route('/logout')
-def logout():
-    """User logout."""
-    session.pop('user_id', None)
-    session.pop('is_admin', None)
-    flash('Logged out successfully.', 'info')
-    logger.info("User logged out.")
-    return redirect(url_for('main.home'))
-
-# Static Pages
 @main_bp.route('/travel_news')
 def travel_news():
+    """Render the travel news page."""
     logger.debug("Rendering travel news page.")
     return render_template('travel_news.html')
 
 @main_bp.route('/seasonal_favorites')
 def seasonal_favorites():
+    """Render the seasonal favorites page."""
     logger.debug("Rendering seasonal favorites page.")
     return render_template('seasonal_favorites.html')
 
 @main_bp.route('/new_attractions')
 def new_attractions():
+    """Render the new attractions page."""
     logger.debug("Rendering new attractions page.")
     return render_template('new_attractions.html')

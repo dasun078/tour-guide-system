@@ -29,29 +29,32 @@ class Trip(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    destination = db.Column(db.String(100), nullable=False)
-    activities = db.Column(db.Text, nullable=True)
-    budget = db.Column(db.Float, nullable=True)
-    trip_date = db.Column(db.Date, nullable=True)
+    arrival_date = db.Column(db.Date, nullable=False)
+    departure_date = db.Column(db.Date, nullable=False)
+    passport_number = db.Column(db.String(50), nullable=False)
+    phone_number = db.Column(db.String(15), nullable=False)
+    number_of_people = db.Column(db.Integer, nullable=False)
+    destinations = db.relationship('Destination', backref='trip', lazy=True, cascade="all, delete-orphan")
+    hotel = db.Column(db.String(100), nullable=False)
+    budget = db.Column(db.Float, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    coordinates = db.Column(db.String(100), nullable=True)  # New field for storing coordinates
-    feedbacks = db.relationship('Feedback', backref='trip', lazy=True, cascade="all, delete-orphan")
-    tour_plan = db.relationship('TourPlan', backref='trip', lazy=True, uselist=False, cascade="all, delete-orphan")
-    payments = db.relationship('Payment', backref='trip', lazy=True, cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f"<Trip to {self.destination} by User {self.user_id}>"
+        return f"<Trip by User {self.user_id} with budget {self.budget}>"
 
-    @property
-    def lat_lng(self):
-        """Splits coordinates into latitude and longitude."""
-        if self.coordinates:
-            try:
-                lat, lng = map(float, self.coordinates.split(","))
-                return {"lat": lat, "lng": lng}
-            except ValueError:
-                return None
-        return None
+
+class Destination(db.Model):
+    """Model to store destinations, activities, and travel modes for trips."""
+    __tablename__ = 'destinations'
+
+    id = db.Column(db.Integer, primary_key=True)
+    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
+    destination_name = db.Column(db.String(100), nullable=False)
+    activities = db.Column(db.Text, nullable=False)
+    travel_mode = db.Column(db.String(50), nullable=False)  # New column for travel mode
+
+    def __repr__(self):
+        return f"<Destination {self.destination_name} for Trip {self.trip_id}>"
 
 
 class Feedback(db.Model):
