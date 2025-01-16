@@ -34,21 +34,9 @@
             </div>
 
             <!-- Multiple Destinations -->
-            <div id="destinations-container">
-                <label>Destinations:</label>
-                <div class="form-group">
-                    <input type="text" name="destinations[]" placeholder="Enter destination" required>
-                    <textarea name="activities[]" placeholder="Enter activities for this destination" required></textarea>
-                    <label for="travel-mode">Travel Mode:</label>
-                    <select name="travel_modes[]" required>
-                        <option value="">-- Choose Mode of Transport --</option>
-                        <option value="Bus">Bus</option>
-                        <option value="Train">Train</option>
-                        <option value="Tuk Tuk">Tuk Tuk</option>
-                        <option value="Car">Car</option>
-                        <option value="Van">Van</option>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label for="destinations">Destinations:</label>
+                <input type="text" id="destinations" name="destinations" placeholder="Enter destinations separated by commas" required>
             </div>
             <button type="button" id="add-destination" class="btn-secondary">Add Destination</button>
 
@@ -83,8 +71,6 @@
                     <strong>Day {{ day }}:</strong>
                     <p><strong>Destination:</strong> {{ details.destination }}</p>
                     <p><strong>Activities:</strong> {{ details.activities | join(', ') }}</p>
-                    <p><strong>Travel Mode:</strong> {{ details.travel_mode }}</p>
-                    <p><strong>Hotel:</strong> {{ details.hotel }}</p>
                 </li>
                 {% endfor %}
             </ul>
@@ -94,25 +80,30 @@
 </section>
 
 <script>
-    document.getElementById('add-destination').addEventListener('click', function () {
-        const container = document.getElementById('destinations-container');
-        const newDestination = document.createElement('div');
-        newDestination.className = 'form-group';
-        newDestination.innerHTML = `
-            <input type="text" name="destinations[]" placeholder="Enter destination" required>
-            <textarea name="activities[]" placeholder="Enter activities for this destination" required></textarea>
-            <label for="travel-mode">Travel Mode:</label>
-            <select name="travel_modes[]" required>
-                <option value="">-- Choose Mode of Transport --</option>
-                <option value="Bus">Bus</option>
-                <option value="Train">Train</option>
-                <option value="Tuk Tuk">Tuk Tuk</option>
-                <option value="Car">Car</option>
-                <option value="Van">Van</option>
-            </select>
-        `;
-        container.appendChild(newDestination);
-    });
+    // Initialize Google Map
+    function initMap() {
+        const map = new google.maps.Map(document.getElementById("route-map"), {
+            zoom: 7,
+            center: { lat: 7.8731, lng: 80.7718 }, // Centered on Sri Lanka
+        });
+
+        // Example markers
+        const destinations = [
+            { lat: 6.9271, lng: 79.8612, title: "Colombo" },
+            { lat: 7.2906, lng: 80.6337, title: "Kandy" },
+        ];
+
+        destinations.forEach(dest => {
+            new google.maps.Marker({
+                position: { lat: dest.lat, lng: dest.lng },
+                map: map,
+                title: dest.title,
+            });
+        });
+    }
+
+    // Initialize the map on page load
+    window.onload = initMap;
 </script>
 
 <style>

@@ -1,7 +1,6 @@
 from . import db
 from datetime import datetime
 
-
 class User(db.Model):
     """User model representing application users."""
     __tablename__ = 'users'
@@ -22,7 +21,6 @@ class User(db.Model):
     def __repr__(self):
         return f"<User {self.name} ({self.email})>"
 
-
 class Trip(db.Model):
     """Trip model for managing user-planned trips."""
     __tablename__ = 'trips'
@@ -40,21 +38,18 @@ class Trip(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"<Trip by User {self.user_id} with budget {self.budget}>"
+        return f"<Trip to {self.destination} by User {self.user_id}>"
 
-
-class Destination(db.Model):
-    """Model to store destinations, activities, and travel modes for trips."""
-    __tablename__ = 'destinations'
-
-    id = db.Column(db.Integer, primary_key=True)
-    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
-    destination_name = db.Column(db.String(100), nullable=False)
-    activities = db.Column(db.Text, nullable=False)
-    travel_mode = db.Column(db.String(50), nullable=False)  # New column for travel mode
-
-    def __repr__(self):
-        return f"<Destination {self.destination_name} for Trip {self.trip_id}>"
+    @property
+    def lat_lng(self):
+        """Splits coordinates into latitude and longitude."""
+        if self.coordinates:
+            try:
+                lat, lng = map(float, self.coordinates.split(","))
+                return {"lat": lat, "lng": lng}
+            except ValueError:
+                return None
+        return None
 
 
 class Feedback(db.Model):
@@ -71,7 +66,6 @@ class Feedback(db.Model):
     def __repr__(self):
         return f"<Feedback by User {self.user_id} for Trip {self.trip_id}>"
 
-
 class UserPreference(db.Model):
     """Model to store user preferences for generating personalized tour plans."""
     __tablename__ = 'user_preferences'
@@ -82,7 +76,6 @@ class UserPreference(db.Model):
 
     def __repr__(self):
         return f"<UserPreference {self.preference} for User {self.user_id}>"
-
 
 class TourPlan(db.Model):
     """Model for storing generated tour plans."""
@@ -95,7 +88,6 @@ class TourPlan(db.Model):
 
     def __repr__(self):
         return f"<TourPlan for Trip {self.trip_id}>"
-
 
 class Payment(db.Model):
     """Model to track payments for trips."""
@@ -110,7 +102,6 @@ class Payment(db.Model):
 
     def __repr__(self):
         return f"<Payment {self.amount} for Trip {self.trip_id} by User {self.user_id}>"
-
 
 class Notification(db.Model):
     """Model to store user notifications."""

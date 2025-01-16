@@ -56,13 +56,13 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
 
         # Admin login
-        if form.email.data == 'dasungunarathned15@gmail.com' and form.password.data == 'Dasun@123':
+        if form.email.data == 'dasungunarathned15@gmail.com' and form.password.data == 'DASUN@123':
             admin_user = User.query.filter_by(email='dasungunarathned15@gmail.com').first()
             if not admin_user:
                 admin_user = User(
                     name='Admin',
                     email='dasungunarathned15@gmail.com',
-                    password=generate_password_hash('Dasun@123', method='pbkdf2:sha256'),
+                    password=generate_password_hash('DASUN@123', method='pbkdf2:sha256'),
                     is_admin=True
                 )
                 db.session.add(admin_user)
