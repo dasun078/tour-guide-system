@@ -32,25 +32,28 @@ class Trip(db.Model):
     passport_number = db.Column(db.String(50), nullable=False)
     phone_number = db.Column(db.String(15), nullable=False)
     number_of_people = db.Column(db.Integer, nullable=False)
-    destinations = db.relationship('Destination', backref='trip', lazy=True, cascade="all, delete-orphan")
     hotel = db.Column(db.String(100), nullable=False)
     budget = db.Column(db.Float, nullable=False)
+    travel_modes = db.Column(db.Enum('Bus', 'Train', 'Tuk Tuk', 'Car', 'Van', 'Flight', 'Boat'), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    destinations = db.relationship('Destination', backref='trip', lazy=True, cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f"<Trip to {self.destination} by User {self.user_id}>"
+        return f"<Trip by User {self.user_id} with budget {self.budget}>"
 
-    @property
-    def lat_lng(self):
-        """Splits coordinates into latitude and longitude."""
-        if self.coordinates:
-            try:
-                lat, lng = map(float, self.coordinates.split(","))
-                return {"lat": lat, "lng": lng}
-            except ValueError:
-                return None
-        return None
+class Destination(db.Model):
+    """Model to store destinations and activities for trips."""
+    __tablename__ = 'destinations'
 
+    id = db.Column(db.Integer, primary_key=True)
+    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
+    destination_name = db.Column(db.String(100), nullable=False)
+    activities = db.Column(db.Text, nullable=False)
+    travel_mode = db.Column(db.Enum('Bus', 'Train', 'Tuk Tuk', 'Car', 'Van', 'Flight', 'Boat'), nullable=False)
+    hotel = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return f"<Destination {self.destination_name} for Trip {self.trip_id}>"
 
 class Feedback(db.Model):
     """Feedback model to collect user feedback for trips."""

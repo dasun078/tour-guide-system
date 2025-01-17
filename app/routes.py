@@ -56,13 +56,13 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
 
         # Admin login
-        if form.email.data == 'dasungunarathned15@gmail.com' and form.password.data == 'DASUN@123':
+        if form.email.data == 'dasungunarathned15@gmail.com' and form.password.data == 'Dasun@123':
             admin_user = User.query.filter_by(email='dasungunarathned15@gmail.com').first()
             if not admin_user:
                 admin_user = User(
                     name='Admin',
                     email='dasungunarathned15@gmail.com',
-                    password=generate_password_hash('DASUN@123', method='pbkdf2:sha256'),
+                    password=generate_password_hash('Dasun@123', method='pbkdf2:sha256'),
                     is_admin=True
                 )
                 db.session.add(admin_user)
@@ -112,42 +112,30 @@ def plan_trip():
         flash('Please log in to plan a trip.', 'warning')
         return redirect(url_for('main.login'))
 
-    if request.method == 'POST':
+    form = TripForm()
+    if form.validate_on_submit():
         try:
-            arrival_date = request.form.get('arrival_date')
-            departure_date = request.form.get('departure_date')
-            passport_number = request.form.get('passport_number')
-            phone_number = request.form.get('phone_number')
-            number_of_people = request.form.get('number_of_people')
-            destinations = request.form.getlist('destinations[]')
-            activities = request.form.getlist('activities[]')
-            travel_modes = request.form.getlist('travel_modes[]')
-            budget = request.form.get('budget')
-            hotel = request.form.get('hotel')
-
-            if not (arrival_date and departure_date and passport_number and phone_number and destinations and budget and hotel):
-                flash('Please fill in all required fields.', 'danger')
-                return redirect(url_for('main.plan_trip'))
-
             trip = Trip(
                 user_id=user.id,
-                arrival_date=arrival_date,
-                departure_date=departure_date,
-                passport_number=passport_number,
-                phone_number=phone_number,
-                number_of_people=int(number_of_people),
-                hotel=hotel,
-                budget=float(budget)
+                arrival_date=form.arrival_date.data,
+                departure_date=form.departure_date.data,
+                passport_number=form.passport_number.data,
+                phone_number=form.phone_number.data,
+                number_of_people=form.number_of_people.data,
+                hotel=form.hotel.data,
+                budget=form.budget.data
             )
             db.session.add(trip)
             db.session.flush()
 
-            for destination, activity, travel_mode in zip(destinations, activities, travel_modes):
+            for destination, travel_mode, hotel in zip(request.form.getlist('destinations[]'),
+                                                       request.form.getlist('travel_modes[]'),
+                                                       request.form.getlist('hotels[]')):
                 destination_entry = Destination(
                     trip_id=trip.id,
                     destination_name=destination,
-                    activities=activity,
-                    travel_mode=travel_mode
+                    travel_modes=travel_mode,
+                    hotel=hotel
                 )
                 db.session.add(destination_entry)
 
@@ -161,9 +149,7 @@ def plan_trip():
             logger.error(f"Error planning trip: {e}")
             flash('An error occurred while planning your trip. Please try again.', 'danger')
 
-    hotel_suggestions = ["Hotel Colombo", "Kandy Hills Resort", "Sigiriya Haven", "Ella Green View"]
-
-    return render_template('plan_trip.html', user=user, hotel_suggestions=hotel_suggestions)
+    return render_template('plan_trip.html', form=form)
 
 @main_bp.route('/logout')
 def logout():

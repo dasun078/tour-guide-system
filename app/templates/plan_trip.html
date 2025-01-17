@@ -9,56 +9,69 @@
         <p class="subtitle">Fill in the details below to create a personalized itinerary.</p>
         
         <form action="/plan_trip" method="post" class="trip-form">
+            {{ form.hidden_tag() }}
+
             <!-- Arrival and Departure Dates -->
             <div class="form-group">
-                <label for="arrival-date">Date of Arrival:</label>
-                <input type="date" id="arrival-date" name="arrival_date" required>
+                {{ form.arrival_date.label }}
+                {{ form.arrival_date(class_="form-control") }}
             </div>
             <div class="form-group">
-                <label for="departure-date">Date of Departure:</label>
-                <input type="date" id="departure-date" name="departure_date" required>
+                {{ form.departure_date.label }}
+                {{ form.departure_date(class_="form-control") }}
             </div>
 
             <!-- Identity Details -->
             <div class="form-group">
-                <label for="passport">Passport Number:</label>
-                <input type="text" id="passport" name="passport" placeholder="Enter your passport number" required>
+                {{ form.passport_number.label }}
+                {{ form.passport_number(class_="form-control") }}
             </div>
             <div class="form-group">
-                <label for="phone">Phone Number:</label>
-                <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
+                {{ form.phone_number.label }}
+                {{ form.phone_number(class_="form-control") }}
             </div>
             <div class="form-group">
-                <label for="members">Number of People Accompanying:</label>
-                <input type="number" id="members" name="members" placeholder="Enter number of people" required>
+                {{ form.number_of_people.label }}
+                {{ form.number_of_people(class_="form-control") }}
             </div>
 
-            <!-- Multiple Destinations -->
-            <div class="form-group">
-                <label for="destinations">Destinations:</label>
-                <input type="text" id="destinations" name="destinations" placeholder="Enter destinations separated by commas" required>
+            <!-- Destinations Section -->
+            <div id="destinations-section">
+                <h3>Destinations</h3>
+                <div class="destination-group">
+                    <div class="form-group">
+                        <label for="destination">Destination:</label>
+                        <input type="text" name="destinations[]" class="form-control" placeholder="Enter destination" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="travel-mode">Travel Mode:</label>
+                        <select name="travel_modes[]" class="form-control" required>
+                            <option value="">-- Choose Travel Mode --</option>
+                            <option value="Car">Car</option>
+                            <option value="Bus">Bus</option>
+                            <option value="Train">Train</option>
+                            <option value="Flight">Flight</option>
+                            <option value="Boat">Boat</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="hotel">Hotel:</label>
+                        <input type="text" name="hotels[]" class="form-control" placeholder="Enter hotel name" required>
+                    </div>
+                </div>
             </div>
-            <button type="button" id="add-destination" class="btn-secondary">Add Destination</button>
-
-            <!-- Hotel Selection -->
-            <div class="form-group">
-                <label for="hotel">Select Hotel:</label>
-                <select id="hotel" name="hotel" required>
-                    <option value="">-- Choose a Hotel --</option>
-                    <option value="Hotel A">Hotel A</option>
-                    <option value="Hotel B">Hotel B</option>
-                    <option value="Hotel C">Hotel C</option>
-                </select>
-            </div>
+            <button type="button" id="add-destination" class="btn-secondary">Add Another Destination</button>
 
             <!-- Budget -->
             <div class="form-group">
-                <label for="budget">Budget (USD):</label>
-                <input type="number" id="budget" name="budget" placeholder="Enter your budget" required>
+                {{ form.budget.label }}
+                {{ form.budget(class_="form-control") }}
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn-primary">Generate Itinerary</button>
+            <div class="form-group">
+                {{ form.submit(class_="btn-primary btn-block") }}
+            </div>
         </form>
 
         <!-- Itinerary Section -->
@@ -71,6 +84,8 @@
                     <strong>Day {{ day }}:</strong>
                     <p><strong>Destination:</strong> {{ details.destination }}</p>
                     <p><strong>Activities:</strong> {{ details.activities | join(', ') }}</p>
+                    <p><strong>Travel Mode:</strong> {{ details.travel_mode }}</p>
+                    <p><strong>Hotel:</strong> {{ details.hotel }}</p>
                 </li>
                 {% endfor %}
             </ul>
@@ -78,33 +93,6 @@
         {% endif %}
     </div>
 </section>
-
-<script>
-    // Initialize Google Map
-    function initMap() {
-        const map = new google.maps.Map(document.getElementById("route-map"), {
-            zoom: 7,
-            center: { lat: 7.8731, lng: 80.7718 }, // Centered on Sri Lanka
-        });
-
-        // Example markers
-        const destinations = [
-            { lat: 6.9271, lng: 79.8612, title: "Colombo" },
-            { lat: 7.2906, lng: 80.6337, title: "Kandy" },
-        ];
-
-        destinations.forEach(dest => {
-            new google.maps.Marker({
-                position: { lat: dest.lat, lng: dest.lng },
-                map: map,
-                title: dest.title,
-            });
-        });
-    }
-
-    // Initialize the map on page load
-    window.onload = initMap;
-</script>
 
 <style>
 /* General Layout */
@@ -152,12 +140,7 @@ h2 {
 .trip-form textarea {
     height: 80px;
 }
-.note {
-    display: block;
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-    color: #999;
-}
+
 .btn-primary {
     padding: 0.75rem 2rem;
     background-color: #007bff;
@@ -206,4 +189,13 @@ h2 {
     border-radius: 5px;
 }
 </style>
+
+<script>
+    // Add new destination group dynamically
+    document.getElementById('add-destination').addEventListener('click', function() {
+        const destinationGroup = document.querySelector('.destination-group').cloneNode(true);
+        destinationGroup.querySelectorAll('input, select').forEach(input => input.value = '');
+        document.getElementById('destinations-section').appendChild(destinationGroup);
+    });
+</script>
 {% endblock %}
